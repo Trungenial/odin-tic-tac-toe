@@ -14,6 +14,10 @@ const game = (() => {
         return board;
     }
 
+    function start() {
+        return 1;
+    }
+
     function addMark(player, board) {
         //Coordinate of the current marker of the player
         const i = player.indexValue.i;
@@ -69,5 +73,24 @@ const game = (() => {
             countDirection(-1, -1) // Anti- diagonal
         );
     }
-    return { createBoard, createPlayer, addMark, checkWin };
+
+    function swapCurrentPlayer({
+        currentPlayer = player1,
+        player1,
+        player2,
+    } = {}) {
+        if (currentPlayer === player1) {
+            currentPlayer = player2;
+        } else if (currentPlayer === player2) {
+            currentPlayer = player1;
+        }
+
+        return currentPlayer;
+    }
+
+    function reset() {
+        return 0;
+    }
+
+    return { createBoard, createPlayer, start, addMark, checkWin, reset };
 })();
