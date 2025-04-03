@@ -1,6 +1,6 @@
 const game = (() => {
-    function createPlayer(name, marker) {
-        return { name, marker };
+    function createPlayer(name, marker, coordinate) {
+        return { name, marker, coordinate };
     }
 
     function createBoard(size) {
@@ -13,5 +13,13 @@ const game = (() => {
         }
         return board;
     }
-    return { createBoard, createPlayer };
+
+    function addMark(player, board) {
+        //Coordinate of the current marker of the player
+        const x = player.coordinate.x;
+        const y = player.coordinate.y;
+
+        board[x][y] = player.marker;
+    }
+    return { createBoard, createPlayer, addMark };
 })();
