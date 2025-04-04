@@ -74,11 +74,7 @@ const game = (() => {
         );
     }
 
-    function swapCurrentPlayer({
-        currentPlayer = player1,
-        player1,
-        player2,
-    } = {}) {
+    function swapCurrentPlayer(currentPlayer, player1, player2) {
         if (currentPlayer === player1) {
             currentPlayer = player2;
         } else if (currentPlayer === player2) {
@@ -135,9 +131,28 @@ const game = (() => {
         start,
         addMark,
         checkWin,
+        swapCurrentPlayer,
         reset,
         renderBoard,
     };
 })();
 
 game.renderBoard();
+player1 = game.createPlayer("Antony", "X");
+player2 = game.createPlayer("Joe", "O");
+currentPlayer = player1;
+
+cells = document.querySelectorAll("#js-game-board div");
+
+cells.forEach((cell) => {
+    cell.addEventListener("click", () => {
+        if (cell.textContent === "") {
+            cell.textContent = currentPlayer.marker;
+            currentPlayer = game.swapCurrentPlayer(
+                currentPlayer,
+                player1,
+                player2
+            );
+        }
+    });
+});

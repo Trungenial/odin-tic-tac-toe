@@ -43,4 +43,5 @@
 .game-board div {
     background-color: white;
     border: 1px solid wheat;
+    cursor: pointer;
 }
