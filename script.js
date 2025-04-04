@@ -1,6 +1,6 @@
 const game = (() => {
-    function createPlayer(name, marker, indexValue) {
-        return { name, marker, indexValue };
+    function createPlayer(name, marker) {
+        return { name, marker };
     }
 
     function createBoard(size) {
@@ -18,22 +18,22 @@ const game = (() => {
         return 1;
     }
 
-    function addMark(player, board) {
+    function addMark(player, board, iIndex, jIndex) {
         //Coordinate of the current marker of the player
-        const i = player.indexValue.i;
-        const j = player.indexValue.j;
+        const i = iIndex;
+        const j = jIndex;
 
         board[i][j] = player.marker;
     }
 
-    function checkWin(board, player, n) {
+    function checkWin(board, player, iIndex, jIndex, n) {
         const rows = board.length;
         const cols = board[0].length;
 
         function countDirection(iStep, jStep) {
             let count = 1;
-            let i = player.indexValue.i + iStep,
-                j = player.indexValue.j + jStep;
+            let i = iIndex + iStep,
+                j = jIndex + jStep;
 
             // Go forward
             while (
@@ -49,8 +49,8 @@ const game = (() => {
             }
 
             // Go backward
-            i = player.indexValue.i - iStep;
-            j = player.indexValue.j - jStep;
+            i = iIndex - iStep;
+            j = jIndex - jStep;
             while (
                 i >= 0 &&
                 j >= 0 &&
