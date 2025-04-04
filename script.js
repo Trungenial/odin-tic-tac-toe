@@ -88,9 +88,56 @@ const game = (() => {
         return currentPlayer;
     }
 
+    const boardSizeInput = document.querySelector("#js-board-size-input");
+    const gameBoard = document.querySelector("#js-game-board");
+    const confirmButton = document.querySelector(".js-confirm-button");
+
+    function renderBoard() {
+        gameBoard.textContent = "";
+
+        // The N x N. boardSize = N
+        const boardSize = parseInt(boardSizeInput.value);
+
+        const board = game.createBoard(boardSize);
+
+        //get width and height of the board in pixel
+        let gameBoardWidth = gameBoard.offsetWidth || 500;
+        let gameBoardHeight = gameBoard.offsetHeight || 500;
+
+        board.forEach((row) => {
+            row.forEach(() => {
+                let cellElement = document.createElement("div");
+                cellElement.textContent = "";
+
+                //set the actual width and height of each cell in the board
+                cellElement.style.width = `${gameBoardWidth / boardSize}px`;
+                cellElement.style.height = `${gameBoardHeight / boardSize}px`;
+
+                gameBoard.appendChild(cellElement);
+            });
+        });
+    }
+
+    confirmButton.addEventListener("click", renderBoard);
+
+    boardSizeInput.addEventListener("input", (event) => {
+        const value = event.target.value;
+        event.target.value = value.replace(/[^0-9]/g, "");
+    });
+
     function reset() {
         return 0;
     }
 
-    return { createBoard, createPlayer, start, addMark, checkWin, reset };
+    return {
+        createBoard,
+        createPlayer,
+        start,
+        addMark,
+        checkWin,
+        reset,
+        renderBoard,
+    };
 })();
+
+game.renderBoard();

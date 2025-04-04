@@ -1,0 +1,46 @@
+* {
+    box-sizing: border-box;
+}
+
+.panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 10px;
+}
+
+.panel label {
+    font-size: 20px;
+}
+
+.confirm-button {
+    border: none;
+    width: 120px;
+    height: 30px;
+    background-color: rgb(54, 134, 54);
+    box-shadow: 0 0 2px 2px rgb(236, 231, 231);
+    cursor: pointer;
+}
+
+.board-size-input {
+    width: 100px;
+    height: 30px;
+    font-size: 20px;
+}
+
+.game-board {
+    width: 800px;
+    height: 800px;
+    background-color: red;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: left;
+    margin: 10px auto;
+}
+
+.game-board div {
+    background-color: white;
+    border: 1px solid wheat;
+}

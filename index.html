@@ -4,8 +4,21 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
+        <link rel="stylesheet" href="style.css" />
     </head>
     <body>
+        <div class="panel">
+            <label for="">Choose your board size</label>
+            <input
+                type="number"
+                class="board-size-input"
+                id="js-board-size-input"
+                value="10"
+                pattern="[0-9]*"
+            />
+            <button class="confirm-button js-confirm-button">Confirm</button>
+        </div>
+        <div id="js-game-board" class="game-board"></div>
         <script src="script.js"></script>
     </body>
 </html>
