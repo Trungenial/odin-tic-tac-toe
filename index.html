@@ -12,13 +12,34 @@
             <input
                 type="number"
                 class="board-size-input"
-                id="js-board-size-input"
-                value="10"
+                id="board-size-input"
+                value="3"
                 pattern="[0-9]*"
             />
             <button class="confirm-button js-confirm-button">Confirm</button>
         </div>
-        <div id="js-game-board" class="game-board"></div>
+        <div id="game-board" class="game-board"></div>
+        <dialog id="modal-name">
+            <form method="dialog">
+                <div class="name-input-box">
+                    <div class="player-box">
+                        <label for="">Player 1</label>
+                        <input type="text" id="player1-name-input" required />
+                    </div>
+                    <div class="vs">V/S</div>
+                    <div class="player-box">
+                        <label for="">Player 2</label>
+                        <input type="text" id="player2-name-input" required />
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="name-submit">OK</button>
+                </div>
+            </form>
+        </dialog>
+        <dialog id="modal-result">
+            <div id="result"></div>
+        </dialog>
         <script src="script.js"></script>
     </body>
 </html>
