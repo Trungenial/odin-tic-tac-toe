@@ -2,6 +2,24 @@
     box-sizing: border-box;
 }
 
+body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    column-gap: 20px;
+}
+
+.player {
+    flex-grow: 1;
+    height: 100vh;
+    background-color: blue;
+    font-size: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .panel {
     display: flex;
     align-items: center;

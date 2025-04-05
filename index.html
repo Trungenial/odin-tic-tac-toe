@@ -7,18 +7,25 @@
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
-        <div class="panel">
-            <label for="">Choose your board scale</label>
-            <input
-                type="number"
-                class="board-size-input"
-                id="board-size-input"
-                value="3"
-                pattern="[0-9]*"
-            />
-            <button class="confirm-button js-confirm-button">Confirm</button>
+        <div class="player" id="player1"></div>
+        <div>
+            <div class="panel">
+                <label for="">Choose your board scale</label>
+                <input
+                    type="number"
+                    class="board-size-input"
+                    id="board-size-input"
+                    value="3"
+                    pattern="[0-9]*"
+                />
+                <button class="confirm-button js-confirm-button">
+                    Confirm
+                </button>
+            </div>
+            <div id="game-board" class="game-board"></div>
         </div>
-        <div id="game-board" class="game-board"></div>
+        <div class="player" id="player2"></div>
+
         <dialog id="modal-name">
             <form method="dialog">
                 <div class="name-input-box">

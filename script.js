@@ -14,6 +14,8 @@ const game = (() => {
     const resultModal = document.querySelector("#modal-result");
     const resultContent = document.querySelector("#result");
     const submitName = document.querySelector(".name-submit");
+    const player1 = document.querySelector("#player1");
+    const player2 = document.querySelector("#player2");
 
     document.addEventListener("DOMContentLoaded", () => {
         modal.showModal();
@@ -40,6 +42,22 @@ const game = (() => {
             }
         }
         return board;
+    }
+
+    function renderPlayer(player1Obj, player2Obj) {
+        player1.textContent = `${player1Obj.name}`;
+        player2.textContent = `${player2Obj.name}`;
+
+        marker1 = document.createElement("div");
+        marker1.textContent = player1Obj.marker;
+        marker1.style.fontSize = "200px";
+
+        marker2 = document.createElement("div");
+        marker2.textContent = player2Obj.marker;
+        marker2.style.fontSize = "200px";
+
+        player1.appendChild(marker1);
+        player2.appendChild(marker2);
     }
 
     function start() {
@@ -98,7 +116,7 @@ const game = (() => {
             countDirection(0, 1) || // Horizontal
             countDirection(1, 0) || // Vertical
             countDirection(1, 1) || // Main diagonal
-            countDirection(-1, -1) // Anti- diagonal
+            countDirection(1, -1) // Anti- diagonal
         );
     }
 
@@ -117,60 +135,31 @@ const game = (() => {
         resultModal.showModal();
     }
 
-    function swapCurrentPlayer(currentPlayer, player1, player2) {
-        if (currentPlayer === player1) {
-            currentPlayer = player2;
-        } else if (currentPlayer === player2) {
-            currentPlayer = player1;
+    function swapCurrentPlayer(gameState, player1, player2) {
+        if (gameState.currentPlayer === player1) {
+            gameState.currentPlayer = player2;
+        } else if (gameState.currentPlayer === player2) {
+            gameState.currentPlayer = player1;
+        } else {
+            gameState.currentPlayer = player1;
         }
 
-        return currentPlayer;
+        return gameState;
     }
 
     function renderBoard(player1Name, player2Name) {
         const player1 = createPlayer(player1Name, "X");
         const player2 = createPlayer(player2Name, "O");
-        let currentPlayer = player1;
 
-        gameBoard.textContent = "";
-
-        // The N x N. boardSize = N
-        const boardSize = parseInt(boardSizeInput.value);
-
-        const board = createBoard(boardSize);
-
-        //get width and height of the board in pixel
-        let gameBoardWidth = gameBoard.offsetWidth || 500;
-        let gameBoardHeight = gameBoard.offsetHeight || 500;
-
-        const rows = board.length;
-        const cols = board[0].length;
-
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < cols; j++) {
-                let cellElement = document.createElement("div");
-                cellElement.textContent = "";
-                cellElement.setAttribute("data-iindex", `${i}`);
-                cellElement.setAttribute("data-jindex", `${j}`);
-
-                //set the actual width and height of each cell in the board
-                cellElement.style.width = `${gameBoardWidth / boardSize}px`;
-                cellElement.style.height = `${gameBoardHeight / boardSize}px`;
-
-                // Set the font-size of the mark
-                cellElement.style.fontSize = `${gameBoardWidth / boardSize}px`;
-
-                gameBoard.appendChild(cellElement);
-            }
-        }
-        createMechanism(board, currentPlayer, player1, player2);
+        renderPlayer(player1, player2);
+        reRenderBoard(player1, player2);
 
         confirmButton.addEventListener("click", () => {
-            reRenderBoard(currentPlayer, player1, player2);
+            reRenderBoard(player1, player2);
         });
     }
 
-    function reRenderBoard(currentPlayer, player1, player2) {
+    function reRenderBoard(player1, player2) {
         gameBoard.textContent = "";
 
         // The N x N. boardSize = N
@@ -202,48 +191,69 @@ const game = (() => {
                 gameBoard.appendChild(cellElement);
             }
         }
-        createMechanism(board, currentPlayer, player1, player2);
+        createMechanism(board, player1, player2);
     }
 
     function countBoardElements(board) {
         return board.reduce((count, row) => count + row.length, 0);
     }
 
-    function createMechanism(board, currentPlayer, player1, player2) {
+    let gameState = {
+        currentPlayer: {},
+    };
+
+    function createClickCellHander(
+        cell,
+        steps,
+        total,
+        board,
+        player1,
+        player2
+    ) {
+        return function () {
+            if (cell.textContent === "") {
+                // Each step add steps variable 1 value until steps reachs total cells
+                steps++;
+
+                // assign player1 to currentPlayer in default
+                gameState = swapCurrentPlayer(gameState, player1, player2);
+
+                cell.textContent = gameState.currentPlayer.marker;
+                const iIndex = parseInt(cell.dataset.iindex);
+                const jIndex = parseInt(cell.dataset.jindex);
+                addMark(gameState.currentPlayer, board, iIndex, jIndex);
+
+                const isWin = checkWin(
+                    board,
+                    gameState.currentPlayer,
+                    iIndex,
+                    jIndex,
+                    3
+                );
+                const isTie = checkTie(total, steps);
+
+                if (isWin || isTie) {
+                    printResult(isWin, isTie, gameState.currentPlayer);
+                }
+            }
+        };
+    }
+
+    function createMechanism(board, player1, player2) {
         cells = document.querySelectorAll("#game-board div");
         const total = countBoardElements(board);
         let steps = 0;
         cells.forEach((cell) => {
-            cell.addEventListener("click", () => {
-                if (cell.textContent === "") {
-                    // Each step add steps variable 1 value until steps reachs total cells
-                    steps++;
+            const clickCellHandler = createClickCellHander(
+                cell,
+                steps,
+                total,
+                board,
+                player1,
+                player2
+            );
 
-                    cell.textContent = currentPlayer.marker;
-                    const iIndex = parseInt(cell.dataset.iindex);
-                    const jIndex = parseInt(cell.dataset.jindex);
-                    addMark(currentPlayer, board, iIndex, jIndex);
-
-                    const isWin = checkWin(
-                        board,
-                        currentPlayer,
-                        iIndex,
-                        jIndex,
-                        3
-                    );
-                    const isTie = checkTie(total, steps);
-
-                    if (isWin || isTie) {
-                        printResult(isWin, isTie, currentPlayer);
-                    }
-
-                    currentPlayer = swapCurrentPlayer(
-                        currentPlayer,
-                        player1,
-                        player2
-                    );
-                }
-            });
+            cell.addEventListener("click", clickCellHandler);
         });
     }
 
