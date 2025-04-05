@@ -1,36 +1,49 @@
 const game = (() => {
-    function createPlayer(name, marker) {
-        return { name, marker };
+    function createPlayer(name, marker, color) {
+        return { name, marker, color };
     }
 
     const boardSizeInput = document.querySelector("#board-size-input");
     const gameBoard = document.querySelector("#game-board");
     const confirmButton = document.querySelector(".js-confirm-button");
     const startGameButton = document.querySelector("#start-game-button");
-    const resetGameButton = document.querySelector("#start-game-button");
     const player1Input = document.querySelector("#player1-name-input");
     const player2Input = document.querySelector("#player2-name-input");
     const modal = document.querySelector("#modal-name");
     const resultModal = document.querySelector("#modal-result");
     const resultContent = document.querySelector("#result");
-    const submitName = document.querySelector(".name-submit");
     const player1 = document.querySelector("#player1");
     const player2 = document.querySelector("#player2");
+    const consecutiveInput = document.querySelector("#consecutive-input");
+    const viewMatch = document.querySelector(".view-match");
 
     document.addEventListener("DOMContentLoaded", () => {
         modal.showModal();
     });
 
-    submitName.addEventListener("click", () => {
+    modal.addEventListener("close", () => {
         const player1Name = player1Input.value;
         const player2Name = player2Input.value;
-
         renderBoard(player1Name, player2Name);
     });
 
     boardSizeInput.addEventListener("input", (event) => {
         const value = event.target.value;
         event.target.value = value.replace(/[^0-9]/g, "");
+    });
+
+    consecutiveInput.addEventListener("input", (event) => {
+        const value = event.target.value;
+        event.target.value = value.replace(/[^0-9]/g, "");
+    });
+
+    startGameButton.addEventListener("click", () => {
+        gameBoard.classList.remove("disable-click");
+        startGameButton.style.display = "none";
+    });
+
+    viewMatch.addEventListener("click", () => {
+        resultModal.close();
     });
 
     function createBoard(size) {
@@ -72,11 +85,15 @@ const game = (() => {
         board[i][j] = player.marker;
     }
 
-    function checkWin(board, player, iIndex, jIndex, n) {
+    function checkWin(board, player, iIndex, jIndex) {
         const rows = board.length;
         const cols = board[0].length;
+        const n = parseInt(consecutiveInput.value);
+        cells = document.querySelectorAll("#game-board div");
 
         function countDirection(iStep, jStep) {
+            const clonedBoard = board.map((row) => row.map(() => ""));
+
             let count = 1;
             let i = iIndex + iStep,
                 j = jIndex + jStep;
@@ -90,6 +107,7 @@ const game = (() => {
                 board[i][j] === player.marker
             ) {
                 count++;
+                clonedBoard[i][j] = board[i][j];
                 i += iStep;
                 j += jStep;
             }
@@ -105,11 +123,31 @@ const game = (() => {
                 board[i][j] === player.marker
             ) {
                 count++;
+                clonedBoard[i][j] = board[i][j];
                 i -= iStep;
                 j -= jStep;
             }
 
-            return count >= n;
+            if (count >= n) {
+                for (let n = 0; n < rows; n++) {
+                    for (let m = 0; m < cols; m++) {
+                        if (clonedBoard[m][n] !== "") {
+                            cells.forEach((cell) => {
+                                if (
+                                    (m === parseInt(cell.dataset.iindex) &&
+                                        n === parseInt(cell.dataset.jindex)) ||
+                                    (iIndex === parseInt(cell.dataset.iindex) &&
+                                        jIndex ===
+                                            parseInt(cell.dataset.jindex))
+                                ) {
+                                    cell.style.color = "yellow";
+                                }
+                            });
+                        }
+                    }
+                }
+                return true;
+            } else return false;
         }
 
         return (
@@ -148,14 +186,16 @@ const game = (() => {
     }
 
     function renderBoard(player1Name, player2Name) {
-        const player1 = createPlayer(player1Name, "X");
-        const player2 = createPlayer(player2Name, "O");
+        const player1 = createPlayer(player1Name, "X", "red");
+        const player2 = createPlayer(player2Name, "O", "blue");
 
         renderPlayer(player1, player2);
         reRenderBoard(player1, player2);
 
         confirmButton.addEventListener("click", () => {
             reRenderBoard(player1, player2);
+            startGameButton.style.display = "inline-block";
+            gameBoard.classList.add("disable-click");
         });
     }
 
@@ -200,25 +240,21 @@ const game = (() => {
 
     let gameState = {
         currentPlayer: {},
+        steps: 0,
     };
 
-    function createClickCellHander(
-        cell,
-        steps,
-        total,
-        board,
-        player1,
-        player2
-    ) {
+    function createClickCellHander(cell, total, board, player1, player2) {
         return function clickCellHandler() {
             if (cell.textContent === "") {
                 // Each step add steps variable 1 value until steps reachs total cells
-                steps++;
+                gameState.steps++;
 
                 // assign player1 to currentPlayer in default
                 gameState = swapCurrentPlayer(gameState, player1, player2);
 
                 cell.textContent = gameState.currentPlayer.marker;
+                cell.style.color = gameState.currentPlayer.color;
+
                 const iIndex = parseInt(cell.dataset.iindex);
                 const jIndex = parseInt(cell.dataset.jindex);
                 addMark(gameState.currentPlayer, board, iIndex, jIndex);
@@ -227,14 +263,14 @@ const game = (() => {
                     board,
                     gameState.currentPlayer,
                     iIndex,
-                    jIndex,
-                    3
+                    jIndex
                 );
-                const isTie = checkTie(total, steps);
+                const isTie = checkTie(total, gameState.steps);
 
                 if (isWin || isTie) {
                     printResult(isWin, isTie, gameState.currentPlayer);
                     removeClickHandler();
+                    gameState.steps = 0;
                 }
             }
         };
@@ -245,8 +281,8 @@ const game = (() => {
     function removeClickHandler() {
         eventHandlers.forEach(({ cell, clickCellHandler }) => {
             cell.removeEventListener("click", clickCellHandler); // Loại bỏ event listener
+            cell.style.cursor = "not-allowed";
         });
-
         // Xóa mảng eventHandlers để giải phóng bộ nhớ
         eventHandlers = [];
     }
@@ -254,11 +290,9 @@ const game = (() => {
     function createMechanism(board, player1, player2) {
         cells = document.querySelectorAll("#game-board div");
         const total = countBoardElements(board);
-        let steps = 0;
         cells.forEach((cell) => {
             const clickCellHandler = createClickCellHander(
                 cell,
-                steps,
                 total,
                 board,
                 player1,
