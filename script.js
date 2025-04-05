@@ -210,7 +210,7 @@ const game = (() => {
         player1,
         player2
     ) {
-        return function () {
+        return function clickCellHandler() {
             if (cell.textContent === "") {
                 // Each step add steps variable 1 value until steps reachs total cells
                 steps++;
@@ -234,9 +234,21 @@ const game = (() => {
 
                 if (isWin || isTie) {
                     printResult(isWin, isTie, gameState.currentPlayer);
+                    removeClickHandler();
                 }
             }
         };
+    }
+
+    let eventHandlers = [];
+
+    function removeClickHandler() {
+        eventHandlers.forEach(({ cell, clickCellHandler }) => {
+            cell.removeEventListener("click", clickCellHandler); // Loại bỏ event listener
+        });
+
+        // Xóa mảng eventHandlers để giải phóng bộ nhớ
+        eventHandlers = [];
     }
 
     function createMechanism(board, player1, player2) {
@@ -254,6 +266,9 @@ const game = (() => {
             );
 
             cell.addEventListener("click", clickCellHandler);
+
+            // Save event listener for removing in the future
+            eventHandlers.push({ cell, clickCellHandler });
         });
     }
 
