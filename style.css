@@ -7,17 +7,25 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     column-gap: 20px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 100%);
+    font-family: "Segoe UI", Arial, sans-serif;
 }
 
 .player {
     flex-grow: 1;
     height: 100vh;
-    background-color: blue;
+    background: linear-gradient(135deg, #3b82f6 60%, #6366f1 100%);
     font-size: 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    color: #fff;
+    border-radius: 30px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    margin: 20px 0;
+    padding: 20px 0;
 }
 
 .panel {
@@ -25,82 +33,131 @@ body {
     align-items: center;
     justify-content: center;
     column-gap: 10px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    padding: 16px 24px;
+    margin-bottom: 20px;
 }
 
 .panel label {
     font-size: 20px;
+    color: #2563eb;
+    font-weight: 500;
 }
 
 .confirm-button {
     border: none;
-    width: 70px;
-    height: 30px;
-    background-color: rgb(54, 134, 54);
-    box-shadow: 0 0 2px 2px rgb(236, 231, 231);
+    width: 90px;
+    height: 40px;
+    background: linear-gradient(90deg, #22c55e 60%, #16a34a 100%);
+    box-shadow: 0 0 4px 2px #e0e7ff;
     cursor: pointer;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.confirm-button:hover {
+    background: linear-gradient(90deg, #16a34a 60%, #22c55e 100%);
 }
 
 .board-input {
-    width: 100px;
-    height: 30px;
-    font-size: 30px;
+    width: 80px;
+    height: 32px;
+    font-size: 24px;
     text-align: center;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    background: #f1f5f9;
+    color: #1e293b;
+    margin: 0 4px;
 }
 
 .board-container {
     position: relative;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.07);
+    padding: 24px;
 }
 
 .game-board {
     width: 800px;
     height: 800px;
-    background-color: red;
+    background: linear-gradient(135deg, #f87171 60%, #fbbf24 100%);
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-content: flex-start;
     justify-content: left;
     margin: 10px auto;
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(239, 68, 68, 0.09);
+    overflow: hidden;
 }
 
 .game-board div {
-    background-color: white;
-    border: 1px solid wheat;
+    background: #fff;
+    border: 2px solid #fbbf24;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: background 0.2s, box-shadow 0.2s;
+    border-radius: 12px;
+}
+
+.game-board div:hover {
+    background: #fef9c3;
+    box-shadow: 0 2px 8px #fde68a;
 }
 
 .start-game {
     width: 400px;
     height: 110px;
     border: none;
-    background-color: mediumseagreen;
+    background: linear-gradient(90deg, #34d399 60%, #06b6d4 100%);
     font-size: 60px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     cursor: pointer;
+    color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(6, 182, 212, 0.12);
+    transition: background 0.2s;
+}
+
+.start-game:hover {
+    background: linear-gradient(90deg, #06b6d4 60%, #34d399 100%);
 }
 
 .disable-click {
     pointer-events: none;
+    opacity: 0.6;
 }
 
 dialog {
     width: 100%;
     height: 100vh;
     font-size: 50px;
-    background-color: brown;
+    background: linear-gradient(135deg, #f59e42 60%, #f87171 100%);
     font-weight: bold;
     overflow: hidden;
+    border-radius: 24px;
+    color: #fff;
+    box-shadow: 0 8px 32px rgba(239, 68, 68, 0.18);
+    border: none;
 }
 
 .name-input-box {
     display: flex;
     justify-content: space-around;
+    gap: 40px;
+    margin-top: 40px;
 }
 
 .player-box {
@@ -108,16 +165,31 @@ dialog {
     flex-direction: column;
     align-items: center;
     row-gap: 30px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 24px 32px;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.07);
 }
 
 .vs {
-    font-size: 200px;
+    font-size: 120px;
+    color: #fff;
+    font-weight: 900;
+    align-self: center;
+    margin: 0 40px;
 }
 
 .player-box input {
     height: 50px;
     font-size: inherit;
     text-align: center;
+    border-radius: 8px;
+    border: 1px solid #fbbf24;
+    background: #fff;
+    color: #ef4444;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 0 12px;
 }
 
 .button-dialog {
@@ -125,10 +197,19 @@ dialog {
     justify-self: center;
     justify-content: center;
     align-items: center;
-    font-size: 50px;
-    background-color: green;
+    font-size: 40px;
+    background: linear-gradient(90deg, #22c55e 60%, #16a34a 100%);
     border: none;
     cursor: pointer;
+    color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #bbf7d0;
+    margin: 0 auto;
+    transition: background 0.2s;
+}
+
+.button-dialog:hover {
+    background: linear-gradient(90deg, #16a34a 60%, #22c55e 100%);
 }
 
 .name-submit {
@@ -141,14 +222,28 @@ dialog {
     width: 100%;
     height: 80%;
     display: flex;
-    font-size: 200px;
+    font-size: 120px;
     justify-content: center;
     align-items: center;
     text-align: center;
+    color: #fff;
+    text-shadow: 2px 2px 8px #fbbf24;
 }
 
 .view-match {
     width: 190px;
     height: 120px;
     margin-top: 40px;
+    font-size: 40px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #fbbf24 60%, #f59e42 100%);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #fde68a;
+    transition: background 0.2s;
+}
+
+.view-match:hover {
+    background: linear-gradient(90deg, #f59e42 60%, #fbbf24 100%);
 }
